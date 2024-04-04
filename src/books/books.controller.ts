@@ -3,19 +3,16 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Delete,
-  Req,
   UseGuards,
   Param,
   Put,
   Query,
 } from '@nestjs/common';
 import { BooksService } from './books.service';
-import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-books.dto';
-import { Request } from 'express';
 import { AccessTokenGuard } from 'src/auth/common/guards/accessToken.guards';
+import { CacheGuard } from 'src/auth/common/cacheGetGuard';
 
 @Controller('books')
 export class BooksController {
@@ -33,7 +30,12 @@ export class BooksController {
     return this.booksService.findAll(query);
   }
 
-  @UseGuards(AccessTokenGuard)
+  @Get('info')
+  getMoreBookInfo(@Query() query) {
+    return this.booksService.getMoreInfo({ search: query });
+  }
+
+  @UseGuards(AccessTokenGuard, CacheGuard)
   @Get(':id')
   findOne(@Param('id') bookId: string) {
     return this.booksService.findById(bookId);

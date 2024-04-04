@@ -22,7 +22,7 @@ export class UsersService {
   async findAll({
     page = 1,
     perPage = 10,
-    search,
+    search = '',
     orderBy = 'createdAt',
     orderDirection = 'desc',
   }: {
