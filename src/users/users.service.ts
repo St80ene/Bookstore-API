@@ -81,8 +81,6 @@ export class UsersService {
     result: UserDocument | string | undefined;
   }> {
     try {
-      console.log('updateUserDto', updateUserDto, 'id', id);
-
       const user = await this.userModel
         .findByIdAndUpdate(id, updateUserDto, { new: true })
         .exec();
