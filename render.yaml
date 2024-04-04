@@ -1,4 +1,0 @@
-services:
-  - name: bookstore-api
-    buildCommand: yarn@3.2.1 install && yarn@3.2.1 build
-    startCommand: yarn@3.2.1 start

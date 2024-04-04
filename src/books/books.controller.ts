@@ -12,7 +12,6 @@ import {
 import { BooksService } from './books.service';
 import { UpdateBookDto } from './dto/update-books.dto';
 import { AccessTokenGuard } from 'src/auth/common/guards/accessToken.guards';
-import { CacheGuard } from 'src/auth/common/cacheGetGuard';
 
 @Controller('books')
 export class BooksController {
@@ -35,7 +34,7 @@ export class BooksController {
     return this.booksService.getMoreInfo({ search: query });
   }
 
-  @UseGuards(AccessTokenGuard, CacheGuard)
+  @UseGuards(AccessTokenGuard)
   @Get(':id')
   findOne(@Param('id') bookId: string) {
     return this.booksService.findById(bookId);
