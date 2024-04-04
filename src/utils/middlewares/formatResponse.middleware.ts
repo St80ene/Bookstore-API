@@ -1,12 +1,12 @@
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import {
   Injectable,
   NestMiddleware,
   ForbiddenException,
   Inject,
-} from '@nestjs/common';
-import { Cache } from 'cache-manager';
-import { Request, Response, NextFunction } from 'express';
+} from "@nestjs/common";
+import { Cache } from "cache-manager";
+import { Request, Response, NextFunction } from "express";
 
 @Injectable()
 export class FormatResponse implements NestMiddleware {
@@ -14,7 +14,6 @@ export class FormatResponse implements NestMiddleware {
 
   async use(req: Request, res: Response, next: NextFunction) {
     const cacheKey = req.originalUrl;
-
 
     let catchedData = await this.cache.get(cacheKey);
 
@@ -25,7 +24,6 @@ export class FormatResponse implements NestMiddleware {
         console.error(error);
       }
     }
-
 
     next();
   }

@@ -3,12 +3,12 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
-} from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { User, UserDocument } from './schemas/user.schema';
+} from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model } from "mongoose";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { UpdateUserDto } from "./dto/update-user.dto";
+import { User, UserDocument } from "./schemas/user.schema";
 
 @Injectable()
 export class UsersService {
@@ -22,15 +22,15 @@ export class UsersService {
   async findAll({
     page = 1,
     perPage = 10,
-    search = '',
-    orderBy = 'createdAt',
-    orderDirection = 'desc',
+    search = "",
+    orderBy = "createdAt",
+    orderDirection = "desc",
   }: {
     page: number;
     perPage: number;
     search?: string;
-    orderBy?: 'createdAt' | 'updatedAt';
-    orderDirection?: 'asc' | 'desc';
+    orderBy?: "createdAt" | "updatedAt";
+    orderDirection?: "asc" | "desc";
   }): Promise<{ message: string; statusCode: number; result: UserDocument[] }> {
     const skip = (page - 1) * perPage;
     let query = this.userModel.find();
@@ -40,8 +40,8 @@ export class UsersService {
       if (search) {
         query = query.find({
           $or: [
-            { name: { $regex: new RegExp(search, 'i') } },
-            { email: { $regex: new RegExp(search, 'i') } },
+            { name: { $regex: new RegExp(search, "i") } },
+            { email: { $regex: new RegExp(search, "i") } },
           ],
         });
       }
@@ -50,14 +50,14 @@ export class UsersService {
       const users = await query.skip(skip).limit(perPage).exec();
 
       return {
-        message: 'Users found successfully',
+        message: "Users found successfully",
         statusCode: HttpStatus.OK,
         result: users,
       };
     } catch (error) {
       this.logger.error(`Error finding users: ${error.message}`, error.stack);
       return {
-        message: 'Error finding users',
+        message: "Error finding users",
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
         result: [],
       };
@@ -85,7 +85,7 @@ export class UsersService {
         .findByIdAndUpdate(id, updateUserDto, { new: true })
         .exec();
 
-      return { message: 'Updated', statusCode: 200, result: user };
+      return { message: "Updated", statusCode: 200, result: user };
     } catch (error) {
       this.logger.error(`Error updating book`, error.stack);
       throw new InternalServerErrorException({
@@ -98,10 +98,10 @@ export class UsersService {
   async remove(id: string): Promise<{ message: string; statusCode: number }> {
     try {
       await this.userModel.findByIdAndDelete(id).exec();
-      return { message: 'Deleted successfully', statusCode: 200 };
+      return { message: "Deleted successfully", statusCode: 200 };
     } catch (error) {
       this.logger.error(`Error deleting user`, error.stack);
-      return { message: 'Error deleting', statusCode: 500 };
+      return { message: "Error deleting", statusCode: 500 };
     }
   }
 }

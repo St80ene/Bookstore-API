@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 
 export function parseAndNormalizeDate(
   dateString: string
@@ -13,7 +13,7 @@ export function parseAndNormalizeDate(
   }
 
   return {
-    error: 'Invalid date format. Expected format: YYYY-MM-DDTHH:mm:ss.SSSZ',
+    error: "Invalid date format. Expected format: YYYY-MM-DDTHH:mm:ss.SSSZ",
   };
 }
 
@@ -24,7 +24,7 @@ export const googleAdditionalBookInfo = async ({ search }) => {
     );
     return info;
   } catch (error) {
-    console.log('error fetching additional info', error);
+    console.log("error fetching additional info", error);
 
     return error;
   }

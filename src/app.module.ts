@@ -1,12 +1,12 @@
-import { Module,MiddlewareConsumer,RequestMethod } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
-import { BooksModule } from './books/books.module';
-import { AuthModule } from './auth/auth.module';
-import { CacheModule } from '@nestjs/cache-manager';
-import { FormatResponse } from './utils/middlewares/formatResponse.middleware';
+import { Module, MiddlewareConsumer, RequestMethod } from "@nestjs/common";
+import { MongooseModule } from "@nestjs/mongoose";
+import { AppController } from "./app.controller";
+import { AppService } from "./app.service";
+import { ConfigModule } from "@nestjs/config";
+import { BooksModule } from "./books/books.module";
+import { AuthModule } from "./auth/auth.module";
+import { CacheModule } from "@nestjs/cache-manager";
+import { FormatResponse } from "./utils/middlewares/formatResponse.middleware";
 
 @Module({
   imports: [
@@ -24,10 +24,10 @@ import { FormatResponse } from './utils/middlewares/formatResponse.middleware';
   providers: [AppService],
 })
 export class AppModule {
-   configure(consumer: MiddlewareConsumer) {
+  configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(FormatResponse)
-      .exclude({ path: 'auth', method: RequestMethod.GET })
-      .forRoutes({ path: '*', method: RequestMethod.ALL });
+      .exclude({ path: "auth", method: RequestMethod.ALL })
+      .forRoutes({ path: "*", method: RequestMethod.ALL });
   }
 }

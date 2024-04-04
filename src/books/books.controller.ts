@@ -8,12 +8,12 @@ import {
   Param,
   Put,
   Query,
-} from '@nestjs/common';
-import { BooksService } from './books.service';
-import { UpdateBookDto } from './dto/update-books.dto';
-import { AccessTokenGuard } from 'src/auth/common/guards/accessToken.guards';
+} from "@nestjs/common";
+import { BooksService } from "./books.service";
+import { UpdateBookDto } from "./dto/update-books.dto";
+import { AccessTokenGuard } from "src/auth/common/guards/accessToken.guards";
 
-@Controller('books')
+@Controller("books")
 export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
@@ -29,26 +29,26 @@ export class BooksController {
     return this.booksService.findAll(query);
   }
 
-  @Get('info')
+  @Get("info")
   getMoreBookInfo(@Query() query) {
     return this.booksService.getMoreInfo({ search: query });
   }
 
   @UseGuards(AccessTokenGuard)
-  @Get(':id')
-  findOne(@Param('id') bookId: string) {
+  @Get(":id")
+  findOne(@Param("id") bookId: string) {
     return this.booksService.findById(bookId);
   }
 
   @UseGuards(AccessTokenGuard)
-  @Put(':id')
-  update(@Param('id') bookId: string, @Body() bookDto: UpdateBookDto) {
+  @Put(":id")
+  update(@Param("id") bookId: string, @Body() bookDto: UpdateBookDto) {
     return this.booksService.update(bookId, bookDto);
   }
 
   @UseGuards(AccessTokenGuard)
-  @Delete(':id')
-  remove(@Param('id') bookId: string) {
+  @Delete(":id")
+  remove(@Param("id") bookId: string) {
     return this.booksService.remove(bookId);
   }
 }
