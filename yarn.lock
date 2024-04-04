@@ -1354,15 +1354,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/cron@npm:^2.4.0":
-  version: 2.4.0
-  resolution: "@types/cron@npm:2.4.0"
-  dependencies:
-    cron: "npm:*"
-  checksum: c763e99a757ea76aee435948c25e0bdaf32ec44c69603088c73e8832df6b121e87932709925fe3e94777833ca30845c31df1167be54c330cf458d348059b9ffc
-  languageName: node
-  linkType: hard
-
 "@types/eslint-scope@npm:^3.7.3":
   version: 3.7.7
   resolution: "@types/eslint-scope@npm:3.7.7"
@@ -1506,13 +1497,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/luxon@npm:~3.3.0":
-  version: 3.3.8
-  resolution: "@types/luxon@npm:3.3.8"
-  checksum: 2176c394e7ee3b8580e9f30bedac29048fabe32589c6561a9654b242b9c2c08ff9b93206f0eca07e495f900a352ac1446236c310eacda574b3c2d6238a9173a7
-  languageName: node
-  linkType: hard
-
 "@types/methods@npm:^1.1.4":
   version: 1.1.4
   resolution: "@types/methods@npm:1.1.4"
@@ -1545,10 +1529,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^16.0.0":
-  version: 16.18.94
-  resolution: "@types/node@npm:16.18.94"
-  checksum: a6f32e8386d78ee0a0c8e2a336e887b4367a9a29991be776b40c587a58bddb8faf0e4bf6011e43e9773453d38e047be2467bb1ec10beed72d36cb3d26982cfee
+"@types/node@npm:^20.12.4":
+  version: 20.12.4
+  resolution: "@types/node@npm:20.12.4"
+  dependencies:
+    undici-types: "npm:~5.26.4"
+  checksum: eab4ed07774b96ea77fc23eb27508dbfe094b52c8326764f5044c609c036a1570fd8708ba770e13db7ad7b69d8a834bf3a4e59fc2f1ade31d6501db76cf5a39b
   languageName: node
   linkType: hard
 
@@ -2577,12 +2563,11 @@ __metadata:
     "@nestjs/platform-express": "npm:^9.4.1"
     "@nestjs/schematics": "npm:^9.2.0"
     "@nestjs/testing": "npm:^9.4.1"
-    "@types/cron": "npm:^2.4.0"
     "@types/express": "npm:^4.17.15"
     "@types/express-session": "npm:^1.17.7"
     "@types/jest": "npm:27.0.2"
     "@types/multer": "npm:^1.4.7"
-    "@types/node": "npm:^16.0.0"
+    "@types/node": "npm:^20.12.4"
     "@types/nodemailer": "npm:^6.4.14"
     "@types/passport-jwt": "npm:^3.0.8"
     "@types/passport-local": "npm:^1.0.34"
@@ -3299,16 +3284,6 @@ __metadata:
   version: 1.1.1
   resolution: "create-require@npm:1.1.1"
   checksum: a9a1503d4390d8b59ad86f4607de7870b39cad43d929813599a23714831e81c520bddf61bcdd1f8e30f05fd3a2b71ae8538e946eb2786dc65c2bbc520f692eff
-  languageName: node
-  linkType: hard
-
-"cron@npm:*":
-  version: 3.1.6
-  resolution: "cron@npm:3.1.6"
-  dependencies:
-    "@types/luxon": "npm:~3.3.0"
-    luxon: "npm:~3.4.0"
-  checksum: 648faf5da570a4d858434489f8474f1b0f377251a211f6936ac6928d2b548d8dae421f4862be34f448e400df025ee6f1b7bd36a7dde8f300596f44dff15f1a1c
   languageName: node
   linkType: hard
 
@@ -6187,13 +6162,6 @@ __metadata:
   dependencies:
     yallist: "npm:^3.0.2"
   checksum: 951d2673dcc64a7fb888bf3d13bc2fdf923faca97d89cdb405ba3dfff77e2b26e5798d405e78fcd7094c9e7b8b4dab2ddc5a4f8a11928af24a207b7c738ca3f8
-  languageName: node
-  linkType: hard
-
-"luxon@npm:~3.4.0":
-  version: 3.4.4
-  resolution: "luxon@npm:3.4.4"
-  checksum: c14164bc338987349075a08e63ea3ff902866735f7f5553a355b27be22667919765ff96fde4d3413d0e9a0edc4ff9e2e74ebcb8f86eae0ce8b14b27330d87d6e
   languageName: node
   linkType: hard
 
