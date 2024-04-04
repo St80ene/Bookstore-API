@@ -19,18 +19,20 @@ import { Request } from 'express';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @UseGuards(AccessTokenGuard)
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
+  @UseGuards(AccessTokenGuard)
   @Get()
   findAll(@Query() query) {
     return this.usersService.findAll(query);
   }
 
   @UseGuards(AccessTokenGuard)
-  @Get('/user')
+  @Get('user')
   findOne(@Req() req: Request) {
     return this.usersService.findById(req.user['sub']);
   }
