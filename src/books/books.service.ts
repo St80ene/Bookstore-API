@@ -68,13 +68,39 @@ export class BooksService {
     }
   }
 
-  async findAll(): Promise<{
-    message: string;
-    statusCode: number;
-    result: BookDocument[];
-  }> {
+  async findAll({
+    page = 1,
+    perPage = 10,
+    search,
+    orderBy = 'createdAt',
+    orderDirection = 'desc',
+  }: {
+    page: number;
+    perPage: number;
+    search?: string;
+    orderBy?: 'createdAt' | 'updatedAt';
+    orderDirection?: 'asc' | 'desc';
+  }): Promise<{ message: string; statusCode: number; result: BookDocument[] }> {
     try {
-      const books = await this.bookModel.find().exec();
+      const skip = (page - 1) * perPage;
+      let query = this.bookModel.find();
+
+      // Apply search filters if provided
+      if (search) {
+        query = query.find({
+          $or: [
+            { title: { $regex: new RegExp(search, 'i') } },
+            { genre: { $regex: new RegExp(search, 'i') } },
+            { isbn: { $regex: new RegExp(search, 'i') } },
+          ],
+        });
+      }
+      
+      query = query.sort({ orderBy: orderDirection });
+
+      // Execute the query with pagination
+      const books = await query.skip(skip).limit(perPage).exec();
+
       return {
         message: 'Books found successfully',
         statusCode: HttpStatus.OK,
@@ -121,10 +147,10 @@ export class BooksService {
       return { message: 'Updated', statusCode: 200, result: book };
     } catch (error) {
       this.logger.error(`Error updating book`, error.stack);
-       throw new InternalServerErrorException({
-         statusCode: 404,
-         message: `Error updating book`,
-       });
+      throw new InternalServerErrorException({
+        statusCode: 404,
+        message: `Error updating book`,
+      });
     }
   }
 
