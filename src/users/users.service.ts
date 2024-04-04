@@ -45,14 +45,14 @@ export class UsersService {
       const users = await query.skip(skip).limit(perPage).exec();
 
       return {
-        message: 'Books found successfully',
+        message: 'Users found successfully',
         statusCode: HttpStatus.OK,
         result: users,
       };
     } catch (error) {
-      this.logger.error(`Error finding books: ${error.message}`, error.stack);
+      this.logger.error(`Error finding users: ${error.message}`, error.stack);
       return {
-        message: 'Error finding books',
+        message: 'Error finding users',
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
         result: [],
       };

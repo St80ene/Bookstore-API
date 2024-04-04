@@ -15,13 +15,13 @@ export class AuthController {
     return this.authService.signUp(createUserDto);
   }
 
-  @Post('/login')
+  @Post('login')
   signin(@Body() data: AuthDto) {
     return this.authService.signIn(data);
   }
 
   @UseGuards(AccessTokenGuard)
-  @Get('/logout')
+  @Get('logout')
   logout(@Req() req: Request) {
     return this.authService.logout(req.user['sub']);
   }
