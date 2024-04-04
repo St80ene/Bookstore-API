@@ -16,6 +16,7 @@ import { FormatResponse } from './utils/middlewares/formatResponse.middleware';
       load: [],
     }),
     CacheModule.register(),
+    // @ts-expect-error
     MongooseModule.forRoot(process.env.DB_CONNECTION_STRING),
     BooksModule,
     AuthModule,
