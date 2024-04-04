@@ -1,4 +1,9 @@
-import { HttpStatus, Injectable, Logger } from '@nestjs/common';
+import {
+  HttpStatus,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -70,13 +75,35 @@ export class UsersService {
   async update(
     id: string,
     updateUserDto: UpdateUserDto
-  ): Promise<UserDocument> {
-    return this.userModel
-      .findByIdAndUpdate(id, updateUserDto, { new: true })
-      .exec();
+  ): Promise<{
+    message: string;
+    statusCode: number;
+    result: UserDocument | string | undefined;
+  }> {
+    try {
+      console.log('updateUserDto', updateUserDto, 'id', id);
+
+      const user = await this.userModel
+        .findByIdAndUpdate(id, updateUserDto, { new: true })
+        .exec();
+
+      return { message: 'Updated', statusCode: 200, result: user };
+    } catch (error) {
+      this.logger.error(`Error updating book`, error.stack);
+      throw new InternalServerErrorException({
+        statusCode: 404,
+        message: `Error updating book`,
+      });
+    }
   }
 
-  async remove(id: string) {
-    await this.userModel.findByIdAndDelete(id).exec();
+  async remove(id: string): Promise<{ message: string; statusCode: number }> {
+    try {
+      await this.userModel.findByIdAndDelete(id).exec();
+      return { message: 'Deleted successfully', statusCode: 200 };
+    } catch (error) {
+      this.logger.error(`Error deleting user`, error.stack);
+      return { message: 'Error deleting', statusCode: 500 };
+    }
   }
 }
