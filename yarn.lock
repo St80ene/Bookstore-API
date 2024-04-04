@@ -1475,6 +1475,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nestjs/cache-manager@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@nestjs/cache-manager@npm:1.0.0"
+  peerDependencies:
+    "@nestjs/common": ^9.0.0
+    cache-manager: <=5
+    reflect-metadata: ^0.1.12
+    rxjs: ^7.0.0
+  checksum: fbdc88dbddf17fc693b119b517532a83e11de449d8eb445e9a2efc9cd61fb2caf23d532dceb307b4e645384805ec76228ce5153f4d201dce45463097e6c1ebe4
+  languageName: node
+  linkType: hard
+
 "@nestjs/cli@npm:^8.0.0":
   version: 8.2.8
   resolution: "@nestjs/cli@npm:8.2.8"
@@ -3456,6 +3468,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "bookstore-api@workspace:."
   dependencies:
+    "@nestjs/cache-manager": ^1.0.0
     "@nestjs/cli": ^8.0.0
     "@nestjs/common": ^8.0.0
     "@nestjs/config": ^1.1.6
@@ -3477,6 +3490,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^5.0.0
     "@typescript-eslint/parser": ^5.0.0
     argon2: ^0.30.1
+    cache-manager: ^5.2.2
     class-transformer: ^0.5.1
     class-validator: ^0.13.2
     eslint: ^8.0.1
@@ -3642,6 +3656,17 @@ __metadata:
     tar: ^6.1.11
     unique-filename: ^3.0.0
   checksum: 0250df80e1ad0c828c956744850c5f742c24244e9deb5b7dc81bca90f8c10e011e132ecc58b64497cc1cad9a98968676147fb6575f4f94722f7619757b17a11b
+  languageName: node
+  linkType: hard
+
+"cache-manager@npm:^5.2.2":
+  version: 5.4.0
+  resolution: "cache-manager@npm:5.4.0"
+  dependencies:
+    lodash.clonedeep: ^4.5.0
+    lru-cache: ^10.1.0
+    promise-coalesce: ^1.1.2
+  checksum: ede2fd29ecb17cc73e3201bead73a2f2e3bea4b0a358576854ed3d8669b6c06de63acaef444c2c0cf4107966ab824a68719c5b4c9e7c3de395e832450b449849
   languageName: node
   linkType: hard
 
@@ -6624,6 +6649,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash.clonedeep@npm:^4.5.0":
+  version: 4.5.0
+  resolution: "lodash.clonedeep@npm:4.5.0"
+  checksum: 92c46f094b064e876a23c97f57f81fbffd5d760bf2d8a1c61d85db6d1e488c66b0384c943abee4f6af7debf5ad4e4282e74ff83177c9e63d8ff081a4837c3489
+  languageName: node
+  linkType: hard
+
 "lodash.includes@npm:^4.3.0":
   version: 4.3.0
   resolution: "lodash.includes@npm:4.3.0"
@@ -6718,7 +6750,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lru-cache@npm:^10.0.1, lru-cache@npm:^10.2.0":
+"lru-cache@npm:^10.0.1, lru-cache@npm:^10.1.0, lru-cache@npm:^10.2.0":
   version: 10.2.0
   resolution: "lru-cache@npm:10.2.0"
   checksum: eee7ddda4a7475deac51ac81d7dd78709095c6fa46e8350dc2d22462559a1faa3b81ed931d5464b13d48cbd7e08b46100b6f768c76833912bc444b99c37e25db
@@ -7682,6 +7714,13 @@ __metadata:
   version: 2.0.1
   resolution: "process-nextick-args@npm:2.0.1"
   checksum: 1d38588e520dab7cea67cbbe2efdd86a10cc7a074c09657635e34f035277b59fbb57d09d8638346bf7090f8e8ebc070c96fa5fd183b777fff4f5edff5e9466cf
+  languageName: node
+  linkType: hard
+
+"promise-coalesce@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "promise-coalesce@npm:1.1.2"
+  checksum: 6f951b5db40ca78d09ad0f72adea0a2e9c5bdb0fc5b3ef218c611e2191c6ce2e9f752f815630fd07875dd1c9f04cc7327d6bada04b662dce986ce86ab88c2d5e
   languageName: node
   linkType: hard
 

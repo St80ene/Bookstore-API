@@ -21,4 +21,8 @@ export class Book {
   isbn: string;
 }
 
+// Define indexes for title, author, and isbn fields
+
 export const BookSchema = SchemaFactory.createForClass(Book);
+
+BookSchema.index({ title: 1, author: 1, isbn: 1 });

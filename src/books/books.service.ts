@@ -95,7 +95,7 @@ export class BooksService {
           ],
         });
       }
-      
+
       query = query.sort({ orderBy: orderDirection });
 
       // Execute the query with pagination
@@ -144,6 +144,7 @@ export class BooksService {
       const book = await this.bookModel
         .findByIdAndUpdate(id, updateBookDto, { new: true })
         .exec();
+
       return { message: 'Updated', statusCode: 200, result: book };
     } catch (error) {
       this.logger.error(`Error updating book`, error.stack);
