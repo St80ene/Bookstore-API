@@ -20,11 +20,11 @@ export function parseAndNormalizeDate(
 export const googleAdditionalBookInfo = async ({ search }) => {
   try {
     const info = await axios.get(
-      `https://www.googleapis.com/books/v1/volumes/${search}?key=${process.env.GOOGLE_API_KEY}`,
+      `https://www.googleapis.com/books/v1/volumes?q=${search}`,
     );
-    return info;
+
+    return info?.data;
   } catch (error) {
-    console.log("error fetching additional info", error);
 
     return error;
   }
