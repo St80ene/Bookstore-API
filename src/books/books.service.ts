@@ -157,15 +157,12 @@ export class BooksService {
         };
       } else {
         const info = await googleAdditionalBookInfo(search);
-
-        if (!info) {
-          throw new NotFoundException(`More Info about Book not found`);
-        }
         await this.cache.set(cacheKey, JSON.stringify(info.items));
+
         return {
           message: "More additional info found",
           statusCode: 200,
-          result: info.items,
+          result: info,
         };
       }
     } catch (error) {
