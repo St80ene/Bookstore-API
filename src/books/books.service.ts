@@ -6,15 +6,16 @@ import {
   Logger,
   Inject,
   NotFoundException,
-} from "@nestjs/common";
-import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
-import { CreateBookDto } from "./dto/create-book.dto";
-import { UpdateBookDto } from "./dto/update-books.dto";
-import { Book, BookDocument } from "./schemas/books.schema";
-import { googleAdditionalBookInfo } from "src/utils/file";
-import { CACHE_MANAGER } from "@nestjs/cache-manager";
-import { Cache } from "cache-manager";
+} from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { CreateBookDto } from './dto/create-book.dto';
+import { UpdateBookDto } from './dto/update-books.dto';
+import { Book, BookDocument } from './schemas/books.schema';
+import { googleAdditionalBookInfo } from 'src/utils/file';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+import { IResult } from './result.interface';
 
 @Injectable()
 export class BooksService {
@@ -22,14 +23,10 @@ export class BooksService {
   private readonly logger = new Logger(BooksService.name);
   constructor(
     @InjectModel(Book.name)
-    private bookModel: Model<BookDocument>,
+    private bookModel: Model<BookDocument>
   ) {}
 
-  async create(bookDto: CreateBookDto): Promise<{
-    message: string;
-    statusCode: number;
-    result: BookDocument | string | undefined;
-  }> {
+  async create(bookDto: CreateBookDto): Promise<IResult> {
     try {
       // Split the date string into its components
       // @ts-expect-error
@@ -43,12 +40,12 @@ export class BooksService {
         parseInt(parts[3]), // Hours
         parseInt(parts[4]), // Minutes
         parseInt(parts[5]), // Seconds
-        parseInt(parts[6]) || 0, // Milliseconds
+        parseInt(parts[6]) || 0 // Milliseconds
       );
 
       // Check if the parsed date is valid
       if (isNaN(parsedDate.getTime())) {
-        throw new BadRequestException("Invalid date format");
+        throw new BadRequestException('Invalid date format');
       }
 
       bookDto.publishedDate = parsedDate;
@@ -56,8 +53,7 @@ export class BooksService {
       const createdBook = await new this.bookModel(bookDto).save();
 
       return {
-        message: "Record created succesfully",
-        statusCode: 201,
+        cacheKey: '/api/v1/books',
         result: createdBook,
       };
     } catch (error) {
@@ -65,9 +61,7 @@ export class BooksService {
       this.logger.error(`Error creating book: ${error.message}`, error.stack);
 
       return {
-        message: "Failed to create book",
-        statusCode: 500,
-        result: "",
+        result: null,
       };
     }
   }
@@ -75,96 +69,54 @@ export class BooksService {
   async findAll({
     page = 1,
     perPage = 10,
-    search = "",
-    orderBy = "createdAt",
-    orderDirection = "desc",
+    search = '',
+    orderBy = 'createdAt',
+    orderDirection = 'desc',
   }: {
     page: number;
     perPage: number;
     search?: string;
-    orderBy?: "createdAt" | "updatedAt";
-    orderDirection?: "asc" | "desc";
-  }): Promise<{ message: string; statusCode: number; result: BookDocument[] }> {
+    orderBy?: 'createdAt' | 'updatedAt';
+    orderDirection?: 'asc' | 'desc';
+  }): Promise<IResult> {
     try {
-      const cacheKey = `books:${JSON.stringify({
-        page,
-        perPage,
-        search,
-        orderBy,
-        orderDirection,
-      })}`;
-      const cachedResult = await this.cache.get(cacheKey);
+      const skip = (page - 1) * perPage;
+      let query = this.bookModel.find();
 
-      if (cachedResult) {
-        const parsedResult: string = cachedResult as string;
-        return {
-          message: "Books found successfully",
-          statusCode: HttpStatus.OK,
-          result: JSON.parse(parsedResult),
-        };
-      } else {
-        const skip = (page - 1) * perPage;
-        let query = this.bookModel.find();
-
-        // Apply search filters if provided
-        if (search) {
-          query = query.find({
-            $or: [
-              { title: { $regex: new RegExp(search, "i") } },
-              { genre: { $regex: new RegExp(search, "i") } },
-              { isbn: { $regex: new RegExp(search, "i") } },
-            ],
-          });
-        }
-
-        query = query.sort({ orderBy: orderDirection });
-
-        // Execute the query with pagination
-        const books = await query.skip(skip).limit(perPage).exec();
-
-        await this.cache.set(cacheKey, JSON.stringify(books));
-
-        return {
-          message: "Books found successfully",
-          statusCode: HttpStatus.OK,
-          result: books,
-        };
+      // Apply search filters if provided
+      if (search) {
+        query = query.find({
+          $or: [
+            { title: { $regex: new RegExp(search, 'i') } },
+            { genre: { $regex: new RegExp(search, 'i') } },
+            { isbn: { $regex: new RegExp(search, 'i') } },
+          ],
+        });
       }
+
+      query = query.sort({ orderBy: orderDirection });
+
+      // Execute the query with pagination
+      const books = await query.skip(skip).limit(perPage).exec();
+
+      return {
+        result: books,
+      };
     } catch (error) {
       this.logger.error(`Error finding books: ${error.message}`, error.stack);
       return {
-        message: "Error finding books",
-        statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
         result: [],
       };
     }
   }
 
-  async getMoreInfo({
-    search,
-  }: {
-    search?: string;
-  }): Promise<{ message: string; statusCode: number; result: BookDocument[] }> {
+  async getMoreInfo({ search }: { search?: string }): Promise<IResult> {
     try {
-      const cacheKey = `books:${JSON.stringify({ search })}`;
-      const cachedResult = await this.cache.get(cacheKey);
-      if (cachedResult) {
-        const parsedResult: string = cachedResult as string;
-        return {
-          message: "Books found successfully",
-          statusCode: HttpStatus.OK,
-          result: JSON.parse(parsedResult),
-        };
-      } else {
-        const info = await googleAdditionalBookInfo(search);
-        await this.cache.set(cacheKey, JSON.stringify(info.items));
+      const info = await googleAdditionalBookInfo(search);
 
-        return {
-          message: "More additional info found",
-          statusCode: 200,
-          result: info,
-        };
-      }
+      return {
+        result: info,
+      };
     } catch (error) {
       this.logger.error(`Error finding book info`, error.stack);
       throw new InternalServerErrorException({
@@ -174,22 +126,15 @@ export class BooksService {
     }
   }
 
-  async findById(id: string): Promise<BookDocument> {
+  async findById(id: string): Promise<IResult> {
     try {
-      const cacheKey = `books:${JSON.stringify({ id })}`;
-      const cachedResult = await this.cache.get(cacheKey);
-      if (cachedResult) {
-        const parsedResult: string = cachedResult as string;
-        return JSON.parse(parsedResult);
-      }
       const book = await this.bookModel.findById(id).exec();
 
       if (!book) {
         throw new NotFoundException(`Book not found`);
       }
-      await this.cache.set(cacheKey, JSON.stringify(book));
 
-      return book;
+      return { result: book };
     } catch (error) {
       this.logger.error(`Error finding book`, error.stack);
       throw new InternalServerErrorException({
@@ -199,22 +144,13 @@ export class BooksService {
     }
   }
 
-  async update(
-    id: string,
-    updateBookDto: UpdateBookDto,
-  ): Promise<{
-    message: string;
-    statusCode: number;
-    result: BookDocument | string | undefined;
-  }> {
+  async update(id: string, updateBookDto: UpdateBookDto): Promise<IResult> {
     try {
       const book = await this.bookModel
         .findByIdAndUpdate(id, updateBookDto, { new: true })
         .exec();
 
-      await this.flushKeysContainingBooks("books*");
-
-      return { message: "Updated", statusCode: 200, result: book };
+      return { result: book };
     } catch (error) {
       this.logger.error(`Error updating book`, error.stack);
       throw new InternalServerErrorException({
@@ -224,28 +160,13 @@ export class BooksService {
     }
   }
 
-  async remove(id: string): Promise<{ message: string; statusCode: number }> {
+  async remove(id: string): Promise<IResult> {
     try {
       await this.bookModel.findByIdAndDelete(id).exec();
-      await this.flushKeysContainingBooks("books*");
-      return { message: "Deleted successfully", statusCode: 200 };
+      return { result: null };
     } catch (error) {
       this.logger.error(`Error deleting book`, error.stack);
-      return { message: "Error deleting", statusCode: 500 };
-    }
-  }
-
-  async flushKeysContainingBooks(pattern: string) {
-    try {
-      const result = await this.cache.store.keys(pattern);
-
-      for (const key of result) {
-        await this.cache.del(key);
-      }
-      return true;
-    } catch (error) {
-      console.error("Error flushing keys:", error);
-      throw error;
+      return { result: null };
     }
   }
 }
