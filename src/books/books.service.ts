@@ -158,7 +158,6 @@ export class BooksService {
       } else {
         const info = await googleAdditionalBookInfo(search);
         await this.cache.set(cacheKey, JSON.stringify(info.items));
-        console.log("gotten here");
 
         return {
           message: "More additional info found",
