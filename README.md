@@ -39,3 +39,10 @@ $ cd Bookstore-API
 $ yarn
 $ yarn start:dev
 ```
+
+#### Additional info
+
+- Using Postman to test, the environment should be set to `books`
+
+<img width="333" alt="Screenshot 2024-04-05 at 12 24 51 PM" src="https://github.com/St80ene/Bookstore-API/assets/51080127/7a8cccce-d64d-4b98-9d38-8548b2214627">
+
