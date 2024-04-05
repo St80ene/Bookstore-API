@@ -1,24 +1,13 @@
-import {
-  Catch,
-  ArgumentsHost,
-  HttpException,
-  HttpStatus,
-  Injectable,
-  ExceptionFilter,
-  Inject,
-} from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import {
   CallHandler,
   ExecutionContext,
-  HttpArgumentsHost,
   NestInterceptor,
 } from '@nestjs/common/interfaces';
-import { Response } from 'express';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Cache } from 'cache-manager';
-import { CacheService } from 'src/cache/cache.service';
 
 @Injectable()
 export class FormatResponseFilter implements NestInterceptor {
@@ -37,7 +26,7 @@ export class FormatResponseFilter implements NestInterceptor {
         };
 
         if (method === 'GET') {
-          this.cache.set(request.url, modifiedData).then(() => {});
+          this.cache.set(request.url, modifiedData);
         } else if (data.cacheKey) {
           this.invalidateCache(data.cacheKey);
         }

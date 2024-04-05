@@ -150,7 +150,7 @@ export class BooksService {
         .findByIdAndUpdate(id, updateBookDto, { new: true })
         .exec();
 
-      return { result: book };
+      return { cacheKey: '/api/v1/books', result: book };
     } catch (error) {
       this.logger.error(`Error updating book`, error.stack);
       throw new InternalServerErrorException({
@@ -163,7 +163,7 @@ export class BooksService {
   async remove(id: string): Promise<IResult> {
     try {
       await this.bookModel.findByIdAndDelete(id).exec();
-      return { result: null };
+      return { cacheKey: '/api/v1/books', result: null };
     } catch (error) {
       this.logger.error(`Error deleting book`, error.stack);
       return { result: null };

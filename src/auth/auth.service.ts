@@ -50,11 +50,12 @@ export class AuthService {
       if (!passwordMatches)
         throw new BadRequestException('Password is incorrect');
 
-      const tokens = await this.getTokens(user._id, user.email);
+      const token = await this.jwtService.sign(
+        { id: user.id, ...user },
+        { secret: process.env.JWT_ACCESS_SECRET, expiresIn: `${60 * 60 * 24}s` }
+      );
 
-      await this.updateRefreshToken(user._id, tokens.refreshToken);
-
-      return tokens;
+      return { accessToken: token };
     } catch (error) {
       throw new InternalServerErrorException(
         'Request failed: ' + error.message
