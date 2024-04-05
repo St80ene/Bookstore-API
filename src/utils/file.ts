@@ -1,5 +1,7 @@
+import axios from "axios";
+
 export function parseAndNormalizeDate(
-  dateString: string
+  dateString: string,
 ): string | { error: string } {
   // Define the format for the date string
   const isoFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/;
@@ -11,6 +13,19 @@ export function parseAndNormalizeDate(
   }
 
   return {
-    error: 'Invalid date format. Expected format: YYYY-MM-DDTHH:mm:ss.SSSZ',
+    error: "Invalid date format. Expected format: YYYY-MM-DDTHH:mm:ss.SSSZ",
   };
 }
+
+export const googleAdditionalBookInfo = async ({ search }) => {
+  try {
+    const info = await axios.get(
+      `https://www.googleapis.com/books/v1/volumes/${search}?key=${process.env.GOOGLE_API_KEY}`,
+    );
+    return info;
+  } catch (error) {
+    console.log("error fetching additional info", error);
+
+    return error;
+  }
+};

@@ -8,14 +8,14 @@ import {
   Req,
   Query,
   Put,
-} from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { AccessTokenGuard } from 'src/auth/common/guards/accessToken.guards';
-import { Request } from 'express';
+} from "@nestjs/common";
+import { UsersService } from "./users.service";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { UpdateUserDto } from "./dto/update-user.dto";
+import { AccessTokenGuard } from "src/auth/common/guards/accessToken.guards";
+import { Request } from "express";
 
-@Controller('users')
+@Controller("users")
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -32,20 +32,20 @@ export class UsersController {
   }
 
   @UseGuards(AccessTokenGuard)
-  @Get('user')
+  @Get("view")
   findOne(@Req() req: Request) {
-    return this.usersService.findById(req.user['sub']);
+    return this.usersService.findById(req.user["sub"]);
   }
 
   @UseGuards(AccessTokenGuard)
   @Put()
   update(@Req() req: Request, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(req.user['sub'], updateUserDto);
+    return this.usersService.update(req.user["sub"], updateUserDto);
   }
 
   @UseGuards(AccessTokenGuard)
-  @Delete('/user')
+  @Delete()
   remove(@Req() req: Request) {
-    return this.usersService.remove(req.user['sub']);
+    return this.usersService.remove(req.user["sub"]);
   }
 }
