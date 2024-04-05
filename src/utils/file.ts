@@ -20,7 +20,7 @@ export function parseAndNormalizeDate(
 export const googleAdditionalBookInfo = async ({ search }) => {
   try {
     const info = await axios.get(
-      `https://www.googleapis.com/books/v1/volumes/${search}?key=AIzaSyCkLAf6t-HFgT8Mve1gzPFw3FppRkAvhOI`,
+      `https://www.googleapis.com/books/v1/volumes/${search}?key=${process.env.GOOGLE_API_KEY}`,
     );
     return info;
   } catch (error) {
