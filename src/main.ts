@@ -15,7 +15,7 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-    })
+    }),
   );
 
   app.setGlobalPrefix("api/v1");

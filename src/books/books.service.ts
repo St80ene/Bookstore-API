@@ -22,7 +22,7 @@ export class BooksService {
   private readonly logger = new Logger(BooksService.name);
   constructor(
     @InjectModel(Book.name)
-    private bookModel: Model<BookDocument>
+    private bookModel: Model<BookDocument>,
   ) {}
 
   async create(bookDto: CreateBookDto): Promise<{
@@ -43,7 +43,7 @@ export class BooksService {
         parseInt(parts[3]), // Hours
         parseInt(parts[4]), // Minutes
         parseInt(parts[5]), // Seconds
-        parseInt(parts[6]) || 0 // Milliseconds
+        parseInt(parts[6]) || 0, // Milliseconds
       );
 
       // Check if the parsed date is valid
@@ -122,6 +122,8 @@ export class BooksService {
         // Execute the query with pagination
         const books = await query.skip(skip).limit(perPage).exec();
 
+        await this.cache.set(cacheKey, JSON.stringify(books));
+
         return {
           message: "Books found successfully",
           statusCode: HttpStatus.OK,
@@ -159,6 +161,7 @@ export class BooksService {
         if (!info) {
           throw new NotFoundException(`More Info about Book not found`);
         }
+        await this.cache.set(cacheKey, JSON.stringify(info.items));
         return {
           message: "More additional info found",
           statusCode: 200,
@@ -176,11 +179,19 @@ export class BooksService {
 
   async findById(id: string): Promise<BookDocument> {
     try {
+      const cacheKey = `books:${JSON.stringify({ id })}`;
+      const cachedResult = await this.cache.get(cacheKey);
+      if (cachedResult) {
+        const parsedResult: string = cachedResult as string;
+        return JSON.parse(parsedResult);
+      }
       const book = await this.bookModel.findById(id).exec();
 
       if (!book) {
         throw new NotFoundException(`Book not found`);
       }
+      await this.cache.set(cacheKey, JSON.stringify(book));
+
       return book;
     } catch (error) {
       this.logger.error(`Error finding book`, error.stack);
@@ -193,7 +204,7 @@ export class BooksService {
 
   async update(
     id: string,
-    updateBookDto: UpdateBookDto
+    updateBookDto: UpdateBookDto,
   ): Promise<{
     message: string;
     statusCode: number;
@@ -204,7 +215,7 @@ export class BooksService {
         .findByIdAndUpdate(id, updateBookDto, { new: true })
         .exec();
 
-      // await this.cacheService.invalidateCache('books');
+      await this.flushKeysContainingBooks("books*");
 
       return { message: "Updated", statusCode: 200, result: book };
     } catch (error) {
@@ -219,11 +230,25 @@ export class BooksService {
   async remove(id: string): Promise<{ message: string; statusCode: number }> {
     try {
       await this.bookModel.findByIdAndDelete(id).exec();
-      // await this.cacheService.invalidateCache('books');
+      await this.flushKeysContainingBooks("books*");
       return { message: "Deleted successfully", statusCode: 200 };
     } catch (error) {
       this.logger.error(`Error deleting book`, error.stack);
       return { message: "Error deleting", statusCode: 500 };
+    }
+  }
+
+  async flushKeysContainingBooks(pattern: string) {
+    try {
+      const result = await this.cache.store.keys(pattern);
+
+      for (const key of result) {
+        await this.cache.del(key);
+      }
+      return true;
+    } catch (error) {
+      console.error("Error flushing keys:", error);
+      throw error;
     }
   }
 }

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export function parseAndNormalizeDate(
-  dateString: string
+  dateString: string,
 ): string | { error: string } {
   // Define the format for the date string
   const isoFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/;
@@ -20,7 +20,7 @@ export function parseAndNormalizeDate(
 export const googleAdditionalBookInfo = async ({ search }) => {
   try {
     const info = await axios.get(
-      `https://www.googleapis.com/books/v1/volumes/${search}?key=AIzaSyCkLAf6t-HFgT8Mve1gzPFw3FppRkAvhOI`
+      `https://www.googleapis.com/books/v1/volumes/${search}?key=AIzaSyCkLAf6t-HFgT8Mve1gzPFw3FppRkAvhOI`,
     );
     return info;
   } catch (error) {

@@ -44,7 +44,7 @@ export class UsersController {
   }
 
   @UseGuards(AccessTokenGuard)
-  @Delete("/user")
+  @Delete()
   remove(@Req() req: Request) {
     return this.usersService.remove(req.user["sub"]);
   }

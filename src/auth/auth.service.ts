@@ -16,7 +16,7 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-    private configService: ConfigService
+    private configService: ConfigService,
   ) {}
 
   async signUp(createUserDto: CreateUserDto): Promise<any> {
@@ -57,7 +57,7 @@ export class AuthService {
       return tokens;
     } catch (error) {
       throw new InternalServerErrorException(
-        "Request failed: " + error.message
+        "Request failed: " + error.message,
       );
     }
   }
@@ -67,7 +67,7 @@ export class AuthService {
       return this.usersService.update(userId, { refreshToken: null });
     } catch (error) {
       throw new InternalServerErrorException(
-        "Request failed: " + error.message
+        "Request failed: " + error.message,
       );
     }
   }
@@ -81,7 +81,7 @@ export class AuthService {
       });
     } catch (error) {
       throw new InternalServerErrorException(
-        "Request failed: " + error.message
+        "Request failed: " + error.message,
       );
     }
   }
@@ -96,7 +96,7 @@ export class AuthService {
           },
           {
             expiresIn: `${60 * 60 * 24}s`,
-          }
+          },
         ),
         this.jwtService.signAsync(
           {
@@ -105,7 +105,7 @@ export class AuthService {
           },
           {
             expiresIn: "7d",
-          }
+          },
         ),
       ]);
 
@@ -115,7 +115,7 @@ export class AuthService {
       };
     } catch (error) {
       throw new InternalServerErrorException(
-        "Request failed: " + error.message
+        "Request failed: " + error.message,
       );
     }
   }
@@ -131,7 +131,7 @@ export class AuthService {
         throw new ForbiddenException("Access Denied");
       const refreshTokenMatches = await argon2.verify(
         user.refreshToken,
-        refreshToken
+        refreshToken,
       );
       if (!refreshTokenMatches) throw new ForbiddenException("Access Denied");
       const tokens = await this.getTokens(user.id, user.email);
@@ -139,7 +139,7 @@ export class AuthService {
       return tokens;
     } catch (error) {
       throw new InternalServerErrorException(
-        "Request failed: " + error.message
+        "Request failed: " + error.message,
       );
     }
   }

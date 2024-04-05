@@ -74,7 +74,7 @@ export class UsersService {
 
   async update(
     id: string,
-    updateUserDto: UpdateUserDto
+    updateUserDto: UpdateUserDto,
   ): Promise<{
     message: string;
     statusCode: number;
